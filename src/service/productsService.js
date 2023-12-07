@@ -18,3 +18,27 @@ export const getProductsById = async(pid) => {
         console.error(error)
     }
 }
+
+export const updateProduct = async(pid, obj) => {
+    try {
+        return await productsMongo.updateProduct(pid, obj)
+    } catch(error) {
+        console.error(error)
+    }
+}
+
+export const deleteProduct = async(pid) => {
+    try {
+        return await productsMongo.deleteProduct(pid)
+    } catch(error) {
+        console.error(error)
+    }
+}
+
+export const newProduct = async(obj) => {
+    try {
+        return await productsMongo.newProduct(obj)
+    } catch(error) {
+        console.error(error)
+    }
+}

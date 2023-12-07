@@ -20,3 +20,35 @@ export const getProductsById = async(req, res, next) => {
         next(error)
     }
 }
+
+export const updateProduct = async(req, res, next) => {
+    try {
+        const { pid } = req.params
+        const { obj } = req.body
+        const updatedProduct = await service.updateProduct(pid, obj)
+        res.json({msg: `Producto actualizado: ${updatedProduct}`})
+    } catch(error) {
+        next(error)
+    }
+}
+
+export const deleteProduct = async(req, res, next) => {
+    try {
+        const { pid } = req.params
+        const deletedProduct = await service.deleteProduct(pid)
+        res.json({msg: `Producto eliminado: ${deletedProduct}`})
+    } catch(error) {
+        next(error)
+    }
+}
+
+export const newProduct = async(req, res, next) => {
+    try {
+        const { obj } = req.body 
+        const product = await service.newProduct(obj)
+        res.json(product)
+        console.log(req.body)
+    } catch(error) {
+        next(error)
+    }
+}

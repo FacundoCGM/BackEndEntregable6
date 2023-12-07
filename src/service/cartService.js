@@ -24,3 +24,35 @@ export const cleanCart = async(cid) => {
         console.error(error)
     }
 }
+
+export const deleteOneProduct = async(cid, pid) => {
+    try {
+        return await cartMongo.deleteOneProduct(cid, pid)
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export const updateQuantity = async(cid, pid, quantity) => {
+    try {
+        return await cartMongo.updateQuantity(cid, pid, quantity)
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export const newProductsArrangement = async(cid, productsArrangement) => {
+    try {
+        return await cartMongo.newProductsArrangement(cid,productsArrangement)
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+export const getCarts = async() => {
+    try {
+        return await cartMongo.getCarts()
+    } catch (error) {
+        console.error(error)
+    }
+}

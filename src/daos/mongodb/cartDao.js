@@ -1,14 +1,10 @@
-import { ProductsModel } from "./models/productsModel.js"
 import { CartModel } from "./models/cartModel.js"
 
 export default class CartMongo {
 
-    async newCart() {
+    async newCart(obj) {
         try {
-            const newCart = new CartModel ({
-                products: []
-            })
-            await newCart.save()
+            const newCart = await CartModel.create(obj)
             return newCart
         } catch (error) {
             console.error(error)
@@ -17,20 +13,17 @@ export default class CartMongo {
 
     async saveToCart(cid, pid) {
         try {
-            const productToSave = await ProductsModel.findById(pid)
             const cart = await CartModel.findById(cid)
-
-            const productExists = cart.products.findIndex((allProducts) => allProducts.product.prod === pid)
-            if (productExists !== -1) {
-                cart.products.product[productExists].quantity += 1
-            } else {
-                cart.products.push({
-                    product: pid,
-                    quantity: 1
-                })
-            }
-            cart = await cart.save()
-            return cart
+            if (cart.products.some((elemento) => elemento._id == pid)) {
+                const indexProducto = cart.products.findIndex(
+                  (elemento) => elemento._id == pid
+                );
+                cart.products[indexProducto].quantity += 1
+              } else {
+                cart.products.push(pid)
+              }
+              cart.save()
+              return cart
         } catch (error) {
             console.error(error)
         }
@@ -40,11 +33,71 @@ export default class CartMongo {
         try {
             const cart = await CartModel.findById(cid)
             cart.products = []
-            const cleanCart = await cart.save()
-            return cleanCart
+            cart.save()
+            return cart
         } catch (error) {
             console.error(error)
         }
     } 
+
+    async deleteOneProduct(cid, pid) {
+        try {
+            const cart = await CartModel.findById(cid)
+            for(let i = 0; i < cart.products.length; i++) {
+                const productToDelete = cart.products[i]
+                if(productToDelete._id.valueOf() == pid) {
+                    cart.products.splice(i, 1)
+                    cart.save()
+                    return cart
+                } else return false
+            }
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async updateQuantity(cid, pid, quantity) {
+        try {
+            const cart = await CartModel.findById(cid)
+            for(let i = 0; i < cart.products.length; i++) {
+                const productToUpdate = cart.products[i]
+                if(productToUpdate._id.valueOf() == pid) {
+                    cart.products[i].quantity = quantity
+                    cart.save()
+                    return cart
+                } else return false
+            } 
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async newProductsArrangement(cid, productsArrangement) {
+        try {
+            const cart = await CartModel.findById(cid)
+            if(Array.isArray(productsArrangement)) {
+                cart.products = productsArrangement.map(item => ({
+                    product: item.productId,
+                    quantity: item.quantity
+                }))
+
+                await cart.save()
+                return cart
+            } else {
+                throw new Error('Invalid productsArrangement')
+            }
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async getCarts() {
+        try {
+            const carts = await CartModel.find({})
+            return carts
+        } catch (error) {
+            console.error(error)
+        }
+    }
 }
 

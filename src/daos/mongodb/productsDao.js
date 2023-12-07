@@ -42,4 +42,31 @@ export default class ProductsMongo {
             console.error(error)
         }
     }
+
+    async updateProduct(pid, obj) {
+        try {
+            const productToUpdate = await ProductsModel.findByIdAndUpdate(pid, obj, { new: true})
+            return productToUpdate
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async deleteProduct(pid) {
+        try {
+            const productToDelete = await ProductsModel.findByIdAndDelete(pid)
+            return productToDelete
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    async newProduct(obj) {
+        try {
+            const product = await ProductsModel.create(obj)
+            return product
+        } catch (error) {
+            console.error(error)
+        }
+    }
 }

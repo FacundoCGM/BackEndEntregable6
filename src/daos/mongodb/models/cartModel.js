@@ -1,23 +1,21 @@
-import {Schema, model} from 'mongoose'
+import { Schema, model } from "mongoose"
 
-const CartSchema = new Schema ({
-    products: [{
-        product: {
-            prod: {
-                type: Schema.Types.ObjectId,
-                ref: 'product',
-                default: []
-            },
-            quantity: Number
-        },
-    }]
+const cartSchema = new Schema({
+  products: [
+    {
+      product: {
+        type: Schema.Types.ObjectId,
+        ref: 'products',
+      },
+      quantity: { type: Number, default: 1 }
+    }
+  ]
 })
 
-CartSchema.pre('find', function(){
-    this.populate('products')
+cartSchema.pre('find', function () {
+  this.populate('products.product')
 })
 
 export const CartModel = model(
-    'cart',
-    CartSchema
-)
+    'carts',
+    cartSchema)
